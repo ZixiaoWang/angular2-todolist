@@ -1,0 +1,11 @@
+@mixin flex(){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin backgroundImage(){
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
