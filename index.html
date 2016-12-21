@@ -14,7 +14,7 @@
             <button class="search-btn"><i class="pe-7s-search"></i></button>
         </div><!-- search container -->
 
-        <div class="calendar-container" style="display: none;">
+        <div class="calendar-container" style="display: flex;">
             <div class="left"><i class="pe-7s-left-arrow"></i></div>
             <div class="calendar">
                 <div class="calendar-title">
@@ -213,7 +213,47 @@
             </div>
         </div><!-- result container -->
 
-        
+        <div class="todolist-container" style="display: none;">
+            <div class="todo-tools">
+                <input type="text" placeholder="search">
+                <button title="Add new item to list"><i class="pe-7s-plus"></i></button>
+                <button title="Mark all items as finished"><i class="pe-7s-check"></i></button>
+                <button title="Delete all items"><i class="pe-7s-trash"></i></button>
+            </div>
+            <div class="todo-urgent">
+                <div class="item">
+                    <input type="checkbox">
+                    <div class="item-content">This is the content</div>
+                    <button class="active"><i class="pe-7s-star"></i></button>
+                    <button><i class="pe-7s-trash"></i></button>
+                </div>
+                <div class="item">
+                    <input type="checkbox">
+                    <div class="item-content">This is the super loooooo nnnnnnnng content</div>
+                    <button class="active"><i class="pe-7s-star"></i></button>
+                    <button><i class="pe-7s-trash"></i></button>
+                </div>
+            </div><!-- urgent -->
+            <div class="todo-normal">
+                <div class="item">
+                    <input type="checkbox">
+                    <div class="item-content">This is a normal item.</div>
+                    <button><i class="pe-7s-star"></i></button>
+                    <button><i class="pe-7s-trash"></i></button>
+                </div>
+            </div>
+        </div><!-- todolist container -->
+
+        <div class="input-container" style="display: none;">
+            <div class="input-tools top">
+                <button><i class="pe-7s-close"></i></button>
+            </div>
+            <textarea name="todoitem" id="todoitem" placeholder="what you gonna do?"></textarea>
+            <div class="input-tools bottom">
+                    <button><i class="pe-7s-star"></i></button>
+                    <button><i class="pe-7s-check"></i></button>
+            </div>
+        </div><!-- input container -->
         <script src="dist/js/index.js"></script>
     </body>
 </html>

@@ -2,13 +2,15 @@
 @import './components/search.scss';
 @import './components/calendar.scss';
 @import './components/results.scss';
+@import './components/todo.scss';
+@import './components/input.scss';
 
 html{
     >body{
         width: 100vw;
         height: 100vh;
         margin: 0px;
-        font-family: sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         @include flex();
         flex-direction: column;
 

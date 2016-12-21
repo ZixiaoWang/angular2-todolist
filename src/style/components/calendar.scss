@@ -3,6 +3,7 @@
 .calendar-container{
     @include flex();
     flex-direction: row;
+    margin-bottom: 10px;
     >.left,
     >.right{
         width: 20px;
