@@ -1,0 +1,29 @@
+.search-container{
+    display: flex;
+    width: 420px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin: 10px;
+    >.search-btn{
+        background: none;
+        border: none;
+        padding: 0px;
+        font-size: 22px;
+        line-height: 20px;
+        padding: 5px 10px;
+        cursor: pointer;
+        &:focus{ outline: none; }
+        &.hide{
+            display: none;
+        }
+        &.lb{  border-left: 1px solid #ccc;  }
+        &.rb{  border-right: 1px solid #ccc;  }
+    }
+    >.search-input{
+        width: 100%;
+        height: 20px;
+        border: none;
+        padding: 6px 10px;
+        &:focus{outline: none;}
+    }
+}

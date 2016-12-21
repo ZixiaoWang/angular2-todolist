@@ -1,0 +1,108 @@
+@import '../mixin.scss';
+
+.calendar-container{
+    @include flex();
+    flex-direction: row;
+    >.left,
+    >.right{
+        width: 20px;
+        cursor: pointer;
+        font-size: 22px;
+        color: #ccc;
+        &:hover{
+            color: black;
+        }
+    }
+    >.left{
+        margin-right: 20px;
+    }
+    >.right{
+        margin-left: 20px;
+    }
+    >.calendar{
+        width: 420px;
+        height: 450px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        >.calendar-title{
+            width: 100%;
+            height: 50px;
+            border-bottom: 1px solid #ccc;
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+            >.calendar-add{
+                border: none;
+                padding: 0px;
+                margin: 0px;
+                background: white;
+                position: absolute;
+                right: 10px;
+                font-size: 22px;
+                line-height: 20px;
+            }
+        }
+        >.calendar-body{
+            width: 100%;
+            height: 400px;
+            padding: 10px;
+            box-sizing: border-box;
+            >.calendar-table{
+                width: 100%;
+                height: 100%;
+                font-weight: lighter;
+                th{
+                    width: (418px / 7);
+                    font-weight: lighter;
+                    height: 25px;
+                    border-bottom: 1px solid #ccc;
+                }
+                td{
+                    text-align: right;
+                    vertical-align: top;
+                    padding: 5px;
+                    box-sizing: border-box;
+                    position: relative;
+                    &:not(.fade):hover{
+                        background-color: #efefef;
+                        cursor: pointer;
+                    }
+                    &.fade{
+                        color: #ccc;
+                    }
+                    >.date{
+                        width: 20px;
+                        height: 20px;
+                        display: block;
+                        float: right;
+                        text-align: center;
+                        line-height: 20px;
+                        border-radius: 50%;
+                        &.active{
+                            background-color: #333;
+                            color: white;
+                        }
+                    }
+                    >.priority-mark,
+                    >.mark{
+                        position: absolute;
+                        right: 5px;
+                        height: 5px;
+                        width: 20px;
+                        border-radius: 2px;
+                        display: block;
+                    }
+                    >.priority-mark{
+                        bottom: 15px;
+                        background-color: red;
+                    }
+                    >.mark{
+                        bottom: 7px;
+                        background-color: #ccc;
+                    }
+                }
+
+            }
+        }
+    }
+}
