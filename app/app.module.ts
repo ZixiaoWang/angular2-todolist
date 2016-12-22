@@ -1,5 +1,6 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent }  from './app.component';
 import { SearchComponent } from './components/search';
@@ -9,7 +10,28 @@ import { ResultsListComponent } from './components/results';
 import { TodolistComponent } from './components/todolist';
 
 @NgModule({
-  imports:      [ BrowserModule ],
+  imports:      [ 
+    BrowserModule,
+    RouterModule.forRoot([
+      { 
+        path:'', 
+        redirectTo:'/calendar',
+        pathMatch:'full'
+      },
+      { 
+        path:'calendar',
+        component:CalendarComponent,
+      },
+      { 
+        path:'results', 
+        component:ResultsListComponent,
+      },
+      { 
+        path:'todolist',
+        component:TodolistComponent
+      }
+    ])
+  ],
   declarations: [ 
     AppComponent,
     SearchComponent,

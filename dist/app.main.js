@@ -23,6 +23,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = __webpack_require__(26);
 var platform_browser_1 = __webpack_require__(58);
+var router_1 = __webpack_require__(188);
 var app_component_1 = __webpack_require__(611);
 var search_1 = __webpack_require__(612);
 var calendar_1 = __webpack_require__(619);
@@ -34,7 +35,28 @@ var AppModule = (function () {
     }
     AppModule = __decorate([
         core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule],
+            imports: [
+                platform_browser_1.BrowserModule,
+                router_1.RouterModule.forRoot([
+                    {
+                        path: '',
+                        redirectTo: '/calendar',
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: 'calendar',
+                        component: calendar_1.CalendarComponent,
+                    },
+                    {
+                        path: 'results',
+                        component: results_1.ResultsListComponent,
+                    },
+                    {
+                        path: 'todolist',
+                        component: todolist_1.TodolistComponent
+                    }
+                ])
+            ],
             declarations: [
                 app_component_1.AppComponent,
                 search_1.SearchComponent,
@@ -69,16 +91,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = __webpack_require__(26);
+var router_1 = __webpack_require__(188);
 var AppComponent = (function () {
-    function AppComponent() {
-        this.name = 'Angular';
+    function AppComponent(router) {
+        this.router = router;
     }
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: "\n            <div class=\"app-container\">\n                <search-box></search-box>\n                <calendar></calendar>\n            </div>\n  "
+            template: "\n            <div class=\"app-container\">\n                <search-box></search-box>\n                <router-outlet></router-outlet>\n            </div>\n  "
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [router_1.Router])
     ], AppComponent);
     return AppComponent;
 }());
