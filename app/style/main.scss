@@ -6,7 +6,8 @@
 @import './components/input.scss';
 
 html{
-    >body{
+    >body,
+    .app-container{
         width: 100vw;
         height: 100vh;
         margin: 0px;

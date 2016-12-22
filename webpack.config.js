@@ -8,7 +8,7 @@ module.exports = {
         'main': './app/main.ts'
     },
     output:{
-        path:'src/',
+        path:'dist/',
         filename:'app.[name].js'
     },
     module:{
