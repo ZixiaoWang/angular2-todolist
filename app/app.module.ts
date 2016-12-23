@@ -1,6 +1,7 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { FormsModule }   from '@angular/forms';
 
 import { AppComponent }  from './app.component';
 import { SearchComponent } from './components/search';
@@ -30,7 +31,8 @@ import { TodolistComponent } from './components/todolist';
         path:'todolist',
         component:TodolistComponent
       }
-    ])
+    ]),
+    FormsModule
   ],
   declarations: [ 
     AppComponent,
@@ -38,7 +40,7 @@ import { TodolistComponent } from './components/todolist';
     CalendarComponent,
     InputComponent,
     ResultsListComponent,
-    TodolistComponent,
+    TodolistComponent
   ],
   bootstrap:    [ AppComponent ]
 })

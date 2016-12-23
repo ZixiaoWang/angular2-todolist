@@ -1,13 +1,8 @@
 <div class="results-container">
-    <div class="result">
-        <div class="result-title">This is <b>title</b></div>
+    <div class="result" *ngFor="let memo of memoList">
+        <div class="result-title" [innerHTML]="memo.content"></div>
     </div>
-    <div class="result">
-        <div class="result-title">Write a essay with given <b>title</b></div>
-    </div>
-    <div class="result">
-        <div class="result-title">
-            This is a super long <b>title</b> for testing how long it can contain
-        </div>
+    <div class="result" *ngIf="memoList === undefined">
+        <div class="result-title">Couldn&amp;t find any memoes :(</div>
     </div>
 </div><!-- result container -->
