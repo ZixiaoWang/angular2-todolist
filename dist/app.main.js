@@ -95,33 +95,43 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = __webpack_require__(26);
 var router_1 = __webpack_require__(188);
 var service_searchResults_1 = __webpack_require__(624);
-var todoList = [
-    {
-        id: 1,
-        time: 1482471947398,
-        urgent: [
-            { memo: 'I will do something', status: true },
-            { memo: 'Buy apples while on the way home', status: true }
-        ],
-        normal: [
-            { memo: 'Watch angular 2 tutorial before going to bed', status: true }
-        ]
-    }
-];
+var service_todoList_1 = __webpack_require__(625);
+// const todoList : Array<Memo> = [
+//   {
+//     id:1,
+//     time:1482471947398,
+//     urgent:[
+//       { memo:'I will do something', status:true },
+//       { memo:'Buy apples while on the way home', status:true }
+//     ],
+//     normal:[
+//       { memo:'Watch angular 2 tutorial before going to bed', status:true }
+//     ]
+//   }
+// ]
 var AppComponent = (function () {
-    function AppComponent(router) {
+    function AppComponent(router, todoListProvider) {
         this.router = router;
-        this.todoList = todoList;
+        this.todoListProvider = todoListProvider;
     }
+    AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.todoListProvider.todolistArray$.subscribe(function (list) {
+            _this.todoList = list;
+        });
+    };
     AppComponent.prototype.searchKeyWord = function (arg) {
     };
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
             template: "\n            <div class=\"app-container\">\n                <search-box [todothings]=\"todoList\" (keywordChange)=\"searchKeyWord($event)\"></search-box>\n                <router-outlet></router-outlet>\n            </div>\n  ",
-            providers: [service_searchResults_1.SearchResults]
+            providers: [
+                service_searchResults_1.SearchResults,
+                service_todoList_1.TodoList
+            ]
         }), 
-        __metadata('design:paramtypes', [router_1.Router])
+        __metadata('design:paramtypes', [router_1.Router, service_todoList_1.TodoList])
     ], AppComponent);
     return AppComponent;
 }());
@@ -239,15 +249,88 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = __webpack_require__(26);
+var service_todoList_1 = __webpack_require__(625);
 var CalendarComponent = (function () {
-    function CalendarComponent() {
+    function CalendarComponent(todolistProvider) {
+        this.todolistProvider = todolistProvider;
+        this.ifShowBox = false;
+        this.today = new Date();
+        this.targetDate = new Date();
+        this.year = this.today.getFullYear();
+        this.month = this.today.getMonth();
+        this.date = this.today.getDate();
+        this.calendarList = new Array(7).fill(new Array(7).fill({}));
     }
+    CalendarComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.todoList = this.todolistProvider.getMemoArray();
+        this.todolistProvider.todolistArray$.subscribe(function (list) {
+            _this.todoList = list;
+        });
+        this.updateDate(this.today);
+    };
+    CalendarComponent.prototype.showBox = function () {
+        this.ifShowBox = true;
+        var _now = new Date();
+        this.memoTime = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
+    };
+    CalendarComponent.prototype.closeBox = function (ifShowBox) {
+        this.ifShowBox = ifShowBox;
+    };
+    CalendarComponent.prototype.updateDate = function (date) {
+        this.year = date.getFullYear();
+        this.month = date.getMonth();
+        this.date = date.getDate();
+        this.generateCalendar();
+    };
+    CalendarComponent.prototype.nextMonth = function () {
+        this.targetDate = new Date(this.year, this.month + 1);
+        this.updateDate(this.targetDate);
+    };
+    CalendarComponent.prototype.previousMonth = function () {
+        this.targetDate = new Date(this.year, this.month - 1);
+        this.updateDate(this.targetDate);
+    };
+    CalendarComponent.prototype.generateCalendar = function () {
+        var daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+        for (var row = 0; row < 7; row++) {
+            window.calendar = this.calendarList;
+            for (var cell = 0; cell < 7; cell++) {
+                // logic part start
+                if (7 * row + cell < this.targetDate.getDay() - 1 || 7 * row + cell > daysInMonth - 1) {
+                    this.calendarList[row][cell] = { urgent: false, normal: false, date: '', active: false };
+                }
+                else {
+                    var obj = { urgent: false, normal: false, date: '', active: false };
+                    if (this.todoList[this.year] &&
+                        this.todoList[this.year + ''][this.month + ''] &&
+                        this.todoList[this.year + ''][this.month + ''][7 * row + cell + 1 + '']) {
+                        obj.date = 7 * row + cell + 1 + '';
+                        if (this.todoList[this.year + ''][this.month + ''][7 * row + cell + 1 + ''].urgent.length > 0) {
+                            obj.urgent = true;
+                        }
+                        if (this.todoList[this.year + ''][this.month + ''][7 * row + cell + 1 + ''].normal.length > 0) {
+                            obj.normal = true;
+                        }
+                        if (this.year == this.today.getFullYear() &&
+                            this.month == this.today.getMonth() &&
+                            this.date == this.today.getDate()) {
+                            obj.active = true;
+                        }
+                    }
+                    else {
+                        this.calendarList[row][cell] = obj;
+                    }
+                }
+            }
+        }
+    };
     CalendarComponent = __decorate([
         core_1.Component({
             selector: 'calendar',
             templateUrl: 'app/templates/calendar.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [service_todoList_1.TodoList])
     ], CalendarComponent);
     return CalendarComponent;
 }());
@@ -271,15 +354,58 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = __webpack_require__(26);
+var service_todoList_1 = __webpack_require__(625);
 var InputComponent = (function () {
-    function InputComponent() {
+    function InputComponent(todolistProvider) {
+        this.todolistProvider = todolistProvider;
+        this.urgent = false;
+        this.memoContent = '';
+        this.closeBox = new core_1.EventEmitter();
     }
+    InputComponent.prototype.closeInputBox = function () {
+        this.showBox = false;
+        this.closeBox.emit(this.showBox);
+    };
+    InputComponent.prototype.toggleUrgent = function () {
+        this.urgent = !this.urgent;
+    };
+    InputComponent.prototype.pushMemo = function () {
+        var _memo = {
+            id: null,
+            time: null,
+            urgent: [],
+            normal: []
+        };
+        _memo.id = this.todolistProvider.getLatestId() + 1;
+        _memo.time = this.memoTime;
+        if (this.urgent) {
+            _memo.urgent.push({ memo: this.memoContent, status: false });
+        }
+        else {
+            _memo.normal.push({ memo: this.memoContent, status: false });
+        }
+        this.todolistProvider.addMemo(_memo);
+        this.memoContent = '';
+        this.urgent = false;
+    };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], InputComponent.prototype, "showBox", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number)
+    ], InputComponent.prototype, "memoTime", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], InputComponent.prototype, "closeBox", void 0);
     InputComponent = __decorate([
         core_1.Component({
             selector: 'input-box',
             templateUrl: 'app/templates/input.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [service_todoList_1.TodoList])
     ], InputComponent);
     return InputComponent;
 }());
@@ -6162,6 +6288,115 @@ var SearchResults = (function () {
     return SearchResults;
 }());
 exports.SearchResults = SearchResults;
+
+
+/***/ },
+
+/***/ 625:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var core_1 = __webpack_require__(26);
+var Subject_1 = __webpack_require__(11);
+var TodoList = (function () {
+    function TodoList() {
+        this.latestId = 1;
+        this.todolistHash = {
+            "2016": {
+                "11": {
+                    "30": {
+                        id: 1,
+                        time: 1482471947398,
+                        urgent: [
+                            { memo: 'I will do something', status: true },
+                            { memo: 'Buy apples while on the way home', status: true }
+                        ],
+                        normal: [
+                            { memo: 'Watch angular 2 tutorial before going to bed', status: true }
+                        ]
+                    }
+                }
+            }
+        };
+        this._todolistArray = [];
+        this.todolistArray = new Subject_1.Subject();
+        this.todolistArray$ = this.todolistArray.asObservable();
+    }
+    TodoList.prototype.ngOnInit = function () {
+        this._todolistArray.push(this.todolistHash['2016']['11']['30']);
+        this.todolistArray.next(this._todolistArray);
+    };
+    TodoList.prototype.getMemoHash = function () {
+        return this.todolistHash;
+    };
+    TodoList.prototype.getMemoArray = function () {
+        return this._todolistArray;
+    };
+    TodoList.prototype.getLatestId = function () {
+        return this.latestId;
+    };
+    TodoList.prototype.addMemo = function (memo) {
+        var memoMoment = new Date(memo.time);
+        var memoYear = memoMoment.getFullYear();
+        var memoMonth = memoMoment.getMonth();
+        var memoDate = memoMoment.getDate();
+        if (this.todolistHash[memoYear] &&
+            this.todolistHash[memoYear][memoMonth] &&
+            this.todolistHash[memoYear][memoMonth][memoDate]) {
+            if (memo.urgent.length > 0) {
+                this.todolistHash[memoYear][memoMonth][memoDate].urgent =
+                    this.todolistHash[memoYear][memoMonth][memoDate].urgent.concat(memo.urgent);
+            }
+            if (memo.normal.length > 0) {
+                this.todolistHash[memoYear][memoMonth][memoDate].normal =
+                    this.todolistHash[memoYear][memoMonth][memoDate].normal.concat(memo.normal);
+            }
+        }
+        else {
+            if (!this.todolistHash[memoYear]) {
+                this.todolistHash[memoYear] = {};
+            }
+            if (!this.todolistHash[memoYear][memoMonth]) {
+                this.todolistHash[memoYear][memoMonth] = {};
+            }
+            if (!this.todolistHash[memoYear][memoMonth][memoDate]) {
+                this.todolistHash[memoYear][memoMonth][memoDate] = {};
+            }
+            this.todolistHash[memoYear][memoMonth][memoDate] = memo;
+            this.latestId = memo.id;
+        }
+        this.updateArray();
+        window.todolistarray = this._todolistArray;
+        window.todolisthash = this.todolistHash;
+    };
+    TodoList.prototype.updateArray = function () {
+        this._todolistArray = [];
+        for (var year in this.todolistHash) {
+            for (var month in this.todolistHash[year]) {
+                for (var day in this.todolistHash[year][month]) {
+                    this._todolistArray.push(this.todolistHash[year][month][day]);
+                }
+            }
+        }
+        this.todolistArray.next(this._todolistArray);
+    };
+    TodoList = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [])
+    ], TodoList);
+    return TodoList;
+}());
+exports.TodoList = TodoList;
 
 
 /***/ }

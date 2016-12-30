@@ -1,10 +1,10 @@
-<div class="input-container">
+<div class="input-container" *ngIf="showBox">
     <div class="input-tools top">
-        <button><i class="pe-7s-close"></i></button>
+        <button (click)="closeInputBox()"><i class="pe-7s-close"></i></button>
     </div>
-    <textarea name="todoitem" id="todoitem" placeholder="what you gonna do?"></textarea>
+    <textarea name="todoitem" id="todoitem" placeholder="what you gonna do?" [(ngModel)]="memoContent"></textarea>
     <div class="input-tools bottom">
-            <button><i class="pe-7s-star"></i></button>
-            <button><i class="pe-7s-check"></i></button>
+            <button (click)="toggleUrgent()" [class.active]="urgent" [disabled]="memoContent.length == 0"><i class="pe-7s-star"></i></button>
+            <button (click)="pushMemo()" [disabled]="memoContent.length == 0"><i class="pe-7s-check"></i></button>
     </div>
-</div><!-- input container -->
+</div>
