@@ -1,11 +1,13 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Memo } from './interface.memo';
 import { Subject }    from 'rxjs/Subject';
 
 @Injectable()
-export class TodoList implements OnInit{
+export class TodoList{
     private latestId:number = 1;
-    public todolistHash:any = {
+
+    private _todolistArray:Array<Memo> = [];
+    private _todolistHash:any = {
         "2016":{
             "11":{
                 "30":{
@@ -21,20 +23,21 @@ export class TodoList implements OnInit{
                 }
             }
         }
-    }
-    private _todolistArray:Array<Memo> = [];
+    };
+    public todolistHash = new Subject<any>();
     public todolistArray = new Subject<Array<Memo>>();
-    public todolistArray$ = this.todolistArray.asObservable()
+    public todolistArray$ = this.todolistArray.asObservable();
+    public todolistHash$ = this.todolistHash.asObservable();
 
-    ngOnInit(){
+    constructor(){
         this._todolistArray.push(
-            this.todolistHash['2016']['11']['30']
+            this._todolistHash['2016']['11']['30']
         )
         this.todolistArray.next(this._todolistArray);
     }
 
     getMemoHash():any{
-        return this.todolistHash;
+        return this._todolistHash;
     }
 
     getMemoArray():Array<Memo>{
@@ -52,37 +55,38 @@ export class TodoList implements OnInit{
         let memoDate = memoMoment.getDate();
 
         if( 
-            this.todolistHash[memoYear]  &&
-            this.todolistHash[memoYear][memoMonth] &&
-            this.todolistHash[memoYear][memoMonth][memoDate]
+            this._todolistHash[memoYear]  &&
+            this._todolistHash[memoYear][memoMonth] &&
+            this._todolistHash[memoYear][memoMonth][memoDate]
         ){
             if(memo.urgent.length > 0){
-                this.todolistHash[memoYear][memoMonth][memoDate].urgent = 
-                this.todolistHash[memoYear][memoMonth][memoDate].urgent.concat(memo.urgent);
+                this._todolistHash[memoYear][memoMonth][memoDate].urgent = 
+                this._todolistHash[memoYear][memoMonth][memoDate].urgent.concat(memo.urgent);
             }
             if(memo.normal.length > 0){
-                this.todolistHash[memoYear][memoMonth][memoDate].normal = 
-                this.todolistHash[memoYear][memoMonth][memoDate].normal.concat(memo.normal);
+                this._todolistHash[memoYear][memoMonth][memoDate].normal = 
+                this._todolistHash[memoYear][memoMonth][memoDate].normal.concat(memo.normal);
             }
         }else{
-            if( !this.todolistHash[memoYear] ){ this.todolistHash[memoYear] = {}; }
-            if( !this.todolistHash[memoYear][memoMonth] ){ this.todolistHash[memoYear][memoMonth] = {}; }
-            if( !this.todolistHash[memoYear][memoMonth][memoDate] ){ this.todolistHash[memoYear][memoMonth][memoDate] = {}; }
+            if( !this._todolistHash[memoYear] ){ this._todolistHash[memoYear] = {}; }
+            if( !this._todolistHash[memoYear][memoMonth] ){ this._todolistHash[memoYear][memoMonth] = {}; }
+            if( !this._todolistHash[memoYear][memoMonth][memoDate] ){ this._todolistHash[memoYear][memoMonth][memoDate] = {}; }
 
-            this.todolistHash[memoYear][memoMonth][memoDate] = memo;
+            this._todolistHash[memoYear][memoMonth][memoDate] = memo;
             this.latestId = memo.id;
         }
         this.updateArray();
+        this.todolistHash.next(this._todolistHash);
         window.todolistarray = this._todolistArray;
-        window.todolisthash = this.todolistHash;
+        window.todolistHash = this._todolistHash;
     }
 
     updateArray():void{
         this._todolistArray = [];
-        for(let year in this.todolistHash){
-            for(let month in this.todolistHash[year]){
-                for(let day in this.todolistHash[year][month]){
-                    this._todolistArray.push(this.todolistHash[year][month][day]);
+        for(let year in this._todolistHash){
+            for(let month in this._todolistHash[year]){
+                for(let day in this._todolistHash[year][month]){
+                    this._todolistArray.push(this._todolistHash[year][month][day]);
                 }
             }
         }

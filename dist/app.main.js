@@ -263,9 +263,10 @@ var CalendarComponent = (function () {
     }
     CalendarComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.todoList = this.todolistProvider.getMemoArray();
-        this.todolistProvider.todolistArray$.subscribe(function (list) {
-            _this.todoList = list;
+        this.todoList = this.todolistProvider.getMemoHash();
+        this.todolistProvider.todolistHash$.subscribe(function (hashList) {
+            console.log(hashList);
+            _this.todoList = hashList;
         });
         this.updateDate(this.today);
     };
@@ -282,30 +283,35 @@ var CalendarComponent = (function () {
         this.month = date.getMonth();
         this.date = date.getDate();
         this.generateCalendar();
+        window.today = this.today;
+        window.target = { year: this.year, month: this.month, date: this.date };
     };
     CalendarComponent.prototype.nextMonth = function () {
-        this.targetDate = new Date(this.year, this.month + 1);
+        this.targetDate = new Date(this.year, this.month + 1, 1);
         this.updateDate(this.targetDate);
     };
     CalendarComponent.prototype.previousMonth = function () {
-        this.targetDate = new Date(this.year, this.month - 1);
+        this.targetDate = new Date(this.year, this.month - 1, 1);
         this.updateDate(this.targetDate);
     };
     CalendarComponent.prototype.generateCalendar = function () {
         var daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+        var firstDayIsWhatDate = new Date(this.year, this.month + 1, 1).getDay();
+        console.log(daysInMonth, firstDayIsWhatDate);
         for (var row = 0; row < 7; row++) {
-            window.calendar = this.calendarList;
             for (var cell = 0; cell < 7; cell++) {
                 // logic part start
-                if (7 * row + cell < this.targetDate.getDay() - 1 || 7 * row + cell > daysInMonth - 1) {
-                    this.calendarList[row][cell] = { urgent: false, normal: false, date: '', active: false };
+                if (7 * row + cell < firstDayIsWhatDate ||
+                    7 * row + cell + 1 > daysInMonth + firstDayIsWhatDate) {
+                    console.log('不在本月范围内');
+                    this.calendarList[row][cell] = { urgent: false, normal: false, date: '', active: false, branch: 1 };
                 }
                 else {
-                    var obj = { urgent: false, normal: false, date: '', active: false };
+                    console.log('在本月范围内');
+                    var obj = { urgent: false, normal: false, date: 7 * row + cell + 1, active: false, branch: 2 };
                     if (this.todoList[this.year] &&
                         this.todoList[this.year + ''][this.month + ''] &&
                         this.todoList[this.year + ''][this.month + ''][7 * row + cell + 1 + '']) {
-                        obj.date = 7 * row + cell + 1 + '';
                         if (this.todoList[this.year + ''][this.month + ''][7 * row + cell + 1 + ''].urgent.length > 0) {
                             obj.urgent = true;
                         }
@@ -317,6 +323,7 @@ var CalendarComponent = (function () {
                             this.date == this.today.getDate()) {
                             obj.active = true;
                         }
+                        this.calendarList[row][cell] = obj;
                     }
                     else {
                         this.calendarList[row][cell] = obj;
@@ -324,6 +331,8 @@ var CalendarComponent = (function () {
                 }
             }
         }
+        window.calendarList = this.calendarList;
+        window.calendar = this.todoList;
     };
     CalendarComponent = __decorate([
         core_1.Component({
@@ -6311,7 +6320,8 @@ var Subject_1 = __webpack_require__(11);
 var TodoList = (function () {
     function TodoList() {
         this.latestId = 1;
-        this.todolistHash = {
+        this._todolistArray = [];
+        this._todolistHash = {
             "2016": {
                 "11": {
                     "30": {
@@ -6328,16 +6338,15 @@ var TodoList = (function () {
                 }
             }
         };
-        this._todolistArray = [];
+        this.todolistHash = new Subject_1.Subject();
         this.todolistArray = new Subject_1.Subject();
         this.todolistArray$ = this.todolistArray.asObservable();
-    }
-    TodoList.prototype.ngOnInit = function () {
-        this._todolistArray.push(this.todolistHash['2016']['11']['30']);
+        this.todolistHash$ = this.todolistHash.asObservable();
+        this._todolistArray.push(this._todolistHash['2016']['11']['30']);
         this.todolistArray.next(this._todolistArray);
-    };
+    }
     TodoList.prototype.getMemoHash = function () {
-        return this.todolistHash;
+        return this._todolistHash;
     };
     TodoList.prototype.getMemoArray = function () {
         return this._todolistArray;
@@ -6350,41 +6359,42 @@ var TodoList = (function () {
         var memoYear = memoMoment.getFullYear();
         var memoMonth = memoMoment.getMonth();
         var memoDate = memoMoment.getDate();
-        if (this.todolistHash[memoYear] &&
-            this.todolistHash[memoYear][memoMonth] &&
-            this.todolistHash[memoYear][memoMonth][memoDate]) {
+        if (this._todolistHash[memoYear] &&
+            this._todolistHash[memoYear][memoMonth] &&
+            this._todolistHash[memoYear][memoMonth][memoDate]) {
             if (memo.urgent.length > 0) {
-                this.todolistHash[memoYear][memoMonth][memoDate].urgent =
-                    this.todolistHash[memoYear][memoMonth][memoDate].urgent.concat(memo.urgent);
+                this._todolistHash[memoYear][memoMonth][memoDate].urgent =
+                    this._todolistHash[memoYear][memoMonth][memoDate].urgent.concat(memo.urgent);
             }
             if (memo.normal.length > 0) {
-                this.todolistHash[memoYear][memoMonth][memoDate].normal =
-                    this.todolistHash[memoYear][memoMonth][memoDate].normal.concat(memo.normal);
+                this._todolistHash[memoYear][memoMonth][memoDate].normal =
+                    this._todolistHash[memoYear][memoMonth][memoDate].normal.concat(memo.normal);
             }
         }
         else {
-            if (!this.todolistHash[memoYear]) {
-                this.todolistHash[memoYear] = {};
+            if (!this._todolistHash[memoYear]) {
+                this._todolistHash[memoYear] = {};
             }
-            if (!this.todolistHash[memoYear][memoMonth]) {
-                this.todolistHash[memoYear][memoMonth] = {};
+            if (!this._todolistHash[memoYear][memoMonth]) {
+                this._todolistHash[memoYear][memoMonth] = {};
             }
-            if (!this.todolistHash[memoYear][memoMonth][memoDate]) {
-                this.todolistHash[memoYear][memoMonth][memoDate] = {};
+            if (!this._todolistHash[memoYear][memoMonth][memoDate]) {
+                this._todolistHash[memoYear][memoMonth][memoDate] = {};
             }
-            this.todolistHash[memoYear][memoMonth][memoDate] = memo;
+            this._todolistHash[memoYear][memoMonth][memoDate] = memo;
             this.latestId = memo.id;
         }
         this.updateArray();
+        this.todolistHash.next(this._todolistHash);
         window.todolistarray = this._todolistArray;
-        window.todolisthash = this.todolistHash;
+        window.todolistHash = this._todolistHash;
     };
     TodoList.prototype.updateArray = function () {
         this._todolistArray = [];
-        for (var year in this.todolistHash) {
-            for (var month in this.todolistHash[year]) {
-                for (var day in this.todolistHash[year][month]) {
-                    this._todolistArray.push(this.todolistHash[year][month][day]);
+        for (var year in this._todolistHash) {
+            for (var month in this._todolistHash[year]) {
+                for (var day in this._todolistHash[year][month]) {
+                    this._todolistArray.push(this._todolistHash[year][month][day]);
                 }
             }
         }
