@@ -7883,7 +7883,7 @@ var CalendarComponent = (function () {
     CalendarComponent = __decorate([
         core_1.Component({
             selector: 'calendar',
-            templateUrl: 'app/templates/calendar.html'
+            templateUrl: 'dist/templates/calendar.html'
         }), 
         __metadata('design:paramtypes', [service_todoList_1.TodoList, router_1.Router])
     ], CalendarComponent);
@@ -7958,7 +7958,7 @@ var InputComponent = (function () {
     InputComponent = __decorate([
         core_1.Component({
             selector: 'input-box',
-            templateUrl: 'app/templates/input.html'
+            templateUrl: 'dist/templates/input.html'
         }), 
         __metadata('design:paramtypes', [service_todoList_1.TodoList])
     ], InputComponent);
@@ -8005,7 +8005,7 @@ var ResultsListComponent = (function () {
     ResultsListComponent = __decorate([
         core_1.Component({
             selector: 'results-list',
-            templateUrl: 'app/templates/results.html'
+            templateUrl: 'dist/templates/results.html'
         }), 
         __metadata('design:paramtypes', [service_searchResults_1.SearchResults, router_1.Router])
     ], ResultsListComponent);
@@ -8090,7 +8090,7 @@ var SearchComponent = (function () {
     SearchComponent = __decorate([
         core_1.Component({
             selector: 'search-box',
-            templateUrl: 'app/templates/search.html'
+            templateUrl: 'dist/templates/search.html'
         }), 
         __metadata('design:paramtypes', [router_1.Router, common_1.Location, service_searchResults_1.SearchResults, service_todoList_1.TodoList])
     ], SearchComponent);
@@ -8192,7 +8192,7 @@ var TodolistComponent = (function () {
     TodolistComponent = __decorate([
         core_1.Component({
             selector: 'todo-list',
-            templateUrl: 'app/templates/todolist.html'
+            templateUrl: 'dist/templates/todolist.html'
         }), 
         __metadata('design:paramtypes', [service_todoList_1.TodoList, router_1.Router])
     ], TodolistComponent);

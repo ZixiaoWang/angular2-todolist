@@ -1,0 +1,33 @@
+<input-box [showBox]="ifShowBox" (closeBox)="closeBox($event)" [memoTime]="memoTime"></input-box>
+<div class="calendar-container">
+    <div class="left" (click)="previousMonth()"><i class="pe-7s-left-arrow"></i></div>
+    <div class="calendar">
+        <div class="calendar-title">
+            <span><strong>{{month + 1}}</strong> <small>{{year}}</small></span>
+            <button class="calendar-add" (click)="showBox()"><i class="pe-7s-plus"></i></button>
+        </div>
+        <div class="calendar-body">
+            <table class="calendar-table">
+                <thead>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                    <th>Sun</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of calendarList">
+                        <td *ngFor="let cell of row" (click)="gotoDetail(cell)">
+                            <span class="date" [class.active]="cell.active">{{cell.date}}</span>
+                            <span [class.priority-mark]="cell.urgent"></span>
+                            <span [class.mark]="cell.normal"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="right" (click)="nextMonth()"><i class="pe-7s-right-arrow"></i></div>
+</div><!-- calendar container -->

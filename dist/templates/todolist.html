@@ -1,0 +1,26 @@
+<input-box [showBox]="ifShowBox" (closeBox)="closeBox($event)" [memoTime]="memoTime"></input-box>
+<div class="todolist-container">
+    <div class="todo-tools">
+        <input type="text" placeholder="search">
+        <button title="Add new item to list" (click)="showBox()"><i class="pe-7s-plus"></i></button>
+        <button title="Mark all items as finished" (click)="allDone()"><i class="pe-7s-check"></i></button>
+        <button title="Delete all items" (click)="deleteAllMemo()"><i class="pe-7s-trash"></i></button>
+        <button title="Close and return" (click)="returnToCalendar()"><i class="pe-7s-close"></i></button>
+    </div>
+    <div class="todo-urgent" *ngIf="memo.urgent.length > 0">
+        <div class="item" *ngFor="let memoUrgent of memo.urgent">
+            <input type="checkbox" [(ngModel)]="memoUrgent.status">
+            <div class="item-content">{{memoUrgent.memo}}</div>
+            <button class="active" (click)="togglePriority($index, true, memoUrgent)"><i class="pe-7s-star"></i></button>
+            <button (click)="deleteUrgentItem($index)"><i class="pe-7s-trash"></i></button>
+        </div>
+    </div><!-- urgent -->
+    <div class="todo-normal" *ngIf="memo.normal.length > 0">
+        <div class="item" *ngFor="let memoNormal of memo.normal">
+            <input type="checkbox" [(ngModel)]="memoNormal.status">
+            <div class="item-content">{{memoNormal.memo}}</div>
+            <button (click)="togglePriority($index, false, memoNormal)"><i class="pe-7s-star"></i></button>
+            <button (click)="deleteNormalItem($index)"><i class="pe-7s-trash"></i></button>
+        </div>
+    </div>
+</div><!-- todolist container -->

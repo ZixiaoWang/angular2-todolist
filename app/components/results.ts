@@ -6,7 +6,7 @@ import { SearchResults } from './service.searchResults';
 
 @Component({
     selector:'results-list',
-    templateUrl:'app/templates/results.html'
+    templateUrl:'dist/templates/results.html'
 })
 
 export class ResultsListComponent implements OnInit {

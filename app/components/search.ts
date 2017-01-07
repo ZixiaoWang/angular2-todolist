@@ -8,7 +8,7 @@ import { TodoList } from './service.todoList';
 
 @Component({
     selector:'search-box',
-    templateUrl:'app/templates/search.html'
+    templateUrl:'dist/templates/search.html'
 })
 
 export class SearchComponent implements OnInit {

@@ -6,7 +6,7 @@ import { Memo } from './interface.memo';
 
 @Component({
     selector:'todo-list',
-    templateUrl:'app/templates/todolist.html'
+    templateUrl:'dist/templates/todolist.html'
 })
 
 export class TodolistComponent {

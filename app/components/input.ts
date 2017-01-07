@@ -5,7 +5,7 @@ import { Memo } from './interface.memo';
 
 @Component({
     selector:'input-box',
-    templateUrl:'app/templates/input.html'
+    templateUrl:'dist/templates/input.html'
 })
 
 export class InputComponent {

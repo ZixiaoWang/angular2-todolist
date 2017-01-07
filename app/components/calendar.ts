@@ -6,7 +6,7 @@ import { Memo } from './interface.memo';
 
 @Component({
     selector:'calendar',
-    templateUrl:'app/templates/calendar.html'
+    templateUrl:'dist/templates/calendar.html'
 })
 
 export class CalendarComponent implements OnInit {
