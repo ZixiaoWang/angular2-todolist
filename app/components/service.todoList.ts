@@ -93,5 +93,7 @@ export class TodoList{
 
     deleteMemo(year:string, month:string, date:string){
         delete this._todolistHash[year][month][date];
+        this.updateArray();
+        this.todolistHash.next(this._todolistHash);
     }
 }
