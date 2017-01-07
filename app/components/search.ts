@@ -1,22 +1,31 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Memo } from './interface.memo';
 import { SearchResults } from './service.searchResults';
+import { TodoList } from './service.todoList';
 
 @Component({
     selector:'search-box',
     templateUrl:'app/templates/search.html'
 })
 
-export class SearchComponent {
-    constructor(private router : Router, private location : Location, private searchResults : SearchResults) {}
-
-    @Input() todothings:Array<Memo>;
-
+export class SearchComponent implements OnInit {
+    private todothings:Array<Memo> = [];
     private keyword:string;
     private filteredTodoThings:Array<any> = [];
+
+    constructor(private router : Router, private location : Location, private searchResults : SearchResults, private todoListProvider : TodoList) {
+        this.todothings = this.todoListProvider.getMemoArray();
+        console.log(this.todothings);
+    }
+
+    ngOnInit(){
+        this.todoListProvider.todolistArray$.subscribe( (list) => {
+          this.todothings = list;
+        })
+    }
 
     findMemo(event:any){
         this.filteredTodoThings = [];
@@ -27,7 +36,8 @@ export class SearchComponent {
                 if(urgentItem.memo.includes(this.keyword)){
                     this.filteredTodoThings.push({
                         id:todoitem.id,
-                        content:urgentItem.memo.replace(keywordRegex, '<b>$1</b>')
+                        content:urgentItem.memo.replace(keywordRegex, '<b>$1</b>'),
+                        time:todoitem.time
                     });
                 }
             })
@@ -36,22 +46,21 @@ export class SearchComponent {
                 if(normalItem.memo.includes(this.keyword)){
                     this.filteredTodoThings.push({
                         id:todoitem.id,
-                        content:normalItem.memo.replace(keywordRegex, '<b>$1</b>')
+                        content:normalItem.memo.replace(keywordRegex, '<b>$1</b>'),
+                        time:todoitem.time
                     });
                 }
             })
         })
         this.searchResults.setResultList(this.filteredTodoThings);
-        this.keywordChange.next(this.filteredTodoThings);
     }
 
     focusOnSearch(){
         this.router.navigate(['/results']);
     }
 
-    backToPreviousPage(){
-        this.location.back()
+    backToHome(){
+        this.keyword = '';
+        this.router.navigate(['calendar']);
     }
-
-    @Output() keywordChange : EventEmitter<any> = new EventEmitter();
 }

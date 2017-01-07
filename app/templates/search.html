@@ -1,5 +1,5 @@
 <div class="search-container">
-    <button class="search-btn hide"><i class="pe-7s-left-arrow"></i></button>
+    <button class="search-btn" (click)="backToHome()"><i class="pe-7s-home"></i></button>
     <input 
         type="text" 
         class="search-input" 
@@ -7,8 +7,8 @@
         [(ngModel)]="keyword" 
         (ngModelChange)="findMemo()"
         (focus)="focusOnSearch()"
-        (blur)="backToPreviousPage()"
     >
     <button class="search-btn close hide"><i class="pe-7s-close"></i></button>
     <button class="search-btn"><i class="pe-7s-search"></i></button>
 </div><!-- search container -->
+<!-- (blur)="backToPreviousPage()" -->

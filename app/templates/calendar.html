@@ -9,17 +9,17 @@
         <div class="calendar-body">
             <table class="calendar-table">
                 <thead>
-                    <th>Sun</th>
                     <th>Mon</th>
                     <th>Tue</th>
                     <th>Wed</th>
                     <th>Thu</th>
                     <th>Fri</th>
                     <th>Sat</th>
+                    <th>Sun</th>
                 </thead>
                 <tbody>
                     <tr *ngFor="let row of calendarList">
-                        <td *ngFor="let cell of row">
+                        <td *ngFor="let cell of row" (click)="gotoDetail(cell)">
                             <span class="date" [class.active]="cell.active">{{cell.date}}</span>
                             <span [class.priority-mark]="cell.urgent"></span>
                             <span [class.mark]="cell.normal"></span>

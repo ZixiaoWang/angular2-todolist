@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { TodoList } from './service.todoList';
 import { Memo } from './interface.memo';
@@ -8,34 +9,38 @@ import { Memo } from './interface.memo';
     templateUrl:'app/templates/calendar.html'
 })
 
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
     public ifShowBox:boolean = false;
     public memoTime:number;
-    private today:any = new Date();
-    private targetDate:any = new Date();
-    private year:number = this.today.getFullYear();
-    private month:number = this.today.getMonth();
-    private date:number = this.today.getDate();
-    private todoList:Array<Memo>;
-    private calendarList:Array<any> = new Array(7).fill(new Array(7).fill({}));
+    public today:any = new Date();
+    public targetDate:any = new Date();
+    public year:number = new Date().getFullYear();
+    public month:number = new Date().getMonth();
+    public date:number = new Date().getDate();
+    public todoList:Array<Memo>;
+    public calendarList:Array<Array<any>> = [[],[],[],[],[],[]];
 
-    constructor(private todolistProvider : TodoList) {
-
-    }
-
-    ngOnInit(){
+    constructor(public todolistProvider : TodoList, private router : Router) {
         this.todoList = this.todolistProvider.getMemoHash();
-        this.todolistProvider.todolistHash$.subscribe( (hashList) => {
-            console.log(hashList);
-            this.todoList = hashList;
-        })
         this.updateDate(this.today);
     }
 
-    showBox():void{
+    ngOnInit(){
+        this.todolistProvider.todolistHash$.subscribe( (hashList) => {
+            this.todoList = hashList;
+            this.updateDate(this.today);
+            console.log(this.todoList)
+        })
+    }
+
+    showBox(timestamp?:number):void{
         this.ifShowBox = true;
-        let _now = new Date();
-        this.memoTime = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
+        if(timestamp){
+            this.memoTime = timestamp;
+        }else{
+            let _now = new Date();
+            this.memoTime = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
+        }
     }
 
     closeBox(ifShowBox:boolean){
@@ -47,56 +52,66 @@ export class CalendarComponent {
         this.month = date.getMonth();
         this.date = date.getDate();
         this.generateCalendar();
-        window.today = this.today;
-        window.target = { year:this.year, month:this.month, date:this.date };
     }
     nextMonth(){
-        this.targetDate = new Date(this.year, this.month+1, 1);
+        this.targetDate = new Date(this.year, this.month+1);
         this.updateDate(this.targetDate);
     }
     previousMonth(){
-        this.targetDate = new Date(this.year, this.month-1, 1);
+        this.targetDate = new Date(this.year, this.month-1);
         this.updateDate(this.targetDate);
     }
     generateCalendar(){
-        let daysInMonth = new Date(this.year, this.month+1, 0).getDate();
-        let firstDayIsWhatDate = new Date(this.year, this.month+1, 1).getDay();
-        console.log(daysInMonth, firstDayIsWhatDate);
-        for(let row = 0; row<7; row++){
-            for(let cell = 0; cell<7; cell++){
+        var daysInMonth = new Date(this.year, this.month+1, 0).getDate();
+        var firstDayIsWhatDate = new Date(this.year, this.month, 1).getDay();
+        if(firstDayIsWhatDate == 0){ firstDayIsWhatDate = 7; }
+        console.log('Generate Calendar')
+        console.log('daysInMonth: ' + daysInMonth, 'firstDayIsWhatDate: ' + firstDayIsWhatDate);
+        console.log(this.today)
+        console.log(this.year, this.month, this.date)
+        console.log(this.calendarList)
+        let row = 0; let cell = 0;
+        for(row=0; row<6; row++){
+            for(cell = 0; cell<7; cell++){
                 // logic part start
                 if(
-                    7*row+cell < firstDayIsWhatDate || 
-                    7*row+cell+1 > daysInMonth+firstDayIsWhatDate
+                    (7*row+cell+1 < firstDayIsWhatDate) || 
+                    (7*row+cell+1 > daysInMonth+firstDayIsWhatDate-1)
                 ){ 
-                    console.log('不在本月范围内')
-                    this.calendarList[row][cell] = { urgent:false, normal:false, date:'', active:false, branch:1 };
+                    this.calendarList[row][cell] = { urgent:false, normal:false, date:'', active:false, branch:1, timestamp:0};
                 }else{
-                    console.log('在本月范围内')
-
-                    let obj = { urgent:false, normal:false, date:7*row+cell+1, active:false, branch:2 };
+                    let actualDate:number =  row*7+cell+2-(firstDayIsWhatDate);
+                    let obj = { urgent:false, normal:false, date:7*row+cell+2-firstDayIsWhatDate+'', active:false, branch:2, timestamp:new Date(this.year, this.month, actualDate).getTime()};
+                    if(
+                        this.year == this.today.getFullYear() &&
+                        this.month == this.today.getMonth() &&
+                        this.today.getDate() == actualDate
+                    ){ obj.active = true; }
                     if (
                         this.todoList[this.year] &&
                         this.todoList[this.year+''][this.month+''] &&
-                        this.todoList[this.year+''][this.month+''][7*row+cell+1+'']
+                        this.todoList[this.year+''][this.month+''][actualDate+'']
                     ){
-                        if(this.todoList[this.year+''][this.month+''][7*row+cell+1+''].urgent.length>0){ obj.urgent = true; }
-                        if(this.todoList[this.year+''][this.month+''][7*row+cell+1+''].normal.length>0){ obj.normal = true; }
-                        if(
-                            this.year == this.today.getFullYear() &&
-                            this.month == this.today.getMonth() &&
-                            this.date == this.today.getDate()
-                        ){ obj.active = true; }
-                        this.calendarList[row][cell] = obj; 
+                        if(this.todoList[this.year+''][this.month+''][actualDate+''].urgent.length>0){ obj.urgent = true; }
+                        if(this.todoList[this.year+''][this.month+''][actualDate+''].normal.length>0){ obj.normal = true; }
+                        this.calendarList[row][cell] = obj;
                     }else{
-                        this.calendarList[row][cell] = obj; 
+                        this.calendarList[row][cell] = obj;
                     }
 
                 }
                 // -- logic part end
             }
         }
-        window.calendarList = this.calendarList;
-        window.calendar = this.todoList;
+    }
+
+    gotoDetail(day:any){
+        if(day.branch == 1){
+            // Do nothing here
+        }else if(day.urgent || day.normal){
+            this.router.navigate(['todolist',day.timestamp]);   
+        }else{
+            this.showBox(day.timestamp);
+        }
     }
 }

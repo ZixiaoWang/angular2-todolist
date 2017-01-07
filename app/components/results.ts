@@ -1,4 +1,5 @@
-import { Input, Component, OnInit} from '@angular/core';
+import { Input, Component, OnInit, OnChanges} from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Memo } from './interface.memo';
 import { SearchResults } from './service.searchResults';
@@ -9,13 +10,18 @@ import { SearchResults } from './service.searchResults';
 })
 
 export class ResultsListComponent implements OnInit {
-    private memoList:Array<any>;
+    private memoList:Array<any> = [];
 
-    constructor(private searchResults : SearchResults){ }
+    constructor(private searchResults : SearchResults, private router : Router){ }
 
-     ngOnInit(){
+    ngOnInit(){
         this.searchResults.resultsList$.subscribe( item => {
             this.memoList = item;
         })
+     }
+
+     gotoMemoDetail(timestamp:number){
+        console.log(timestamp);
+        this.router.navigate(['todolist', timestamp]);
      }
 }

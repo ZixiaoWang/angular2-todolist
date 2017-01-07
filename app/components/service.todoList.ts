@@ -12,10 +12,10 @@ export class TodoList{
             "11":{
                 "30":{
                     id:1,
-                    time:1482471947398,
+                    time:1483070400000,
                     urgent:[
                         { memo:'I will do something', status:true },
-                        { memo:'Buy apples while on the way home', status:true }
+                        { memo:'Buy apples while on the way home', status:false }
                     ],
                     normal:[
                         { memo:'Watch angular 2 tutorial before going to bed', status:true }
@@ -77,8 +77,6 @@ export class TodoList{
         }
         this.updateArray();
         this.todolistHash.next(this._todolistHash);
-        window.todolistarray = this._todolistArray;
-        window.todolistHash = this._todolistHash;
     }
 
     updateArray():void{
@@ -91,5 +89,9 @@ export class TodoList{
             }
         }
         this.todolistArray.next(this._todolistArray);
+    }
+
+    deleteMemo(year:string, month:string, date:string){
+        delete this._todolistHash[year][month][date];
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SearchResults } from './components/service.searchResults';
@@ -23,7 +23,7 @@ import { TodoList } from './components/service.todoList';
   selector: 'my-app',
   template: `
             <div class="app-container">
-                <search-box [todothings]="todoList" (keywordChange)="searchKeyWord($event)"></search-box>
+                <search-box (keywordChange)="searchKeyWord($event)"></search-box>
                 <router-outlet></router-outlet>
             </div>
   `,
@@ -32,17 +32,7 @@ import { TodoList } from './components/service.todoList';
     TodoList
   ]
 })
-export class AppComponent implements OnInit { 
+export class AppComponent { 
   constructor( private router : Router, private todoListProvider : TodoList ) { }
   private todoList:Array<Memo>;
-
-  ngOnInit(){
-    this.todoListProvider.todolistArray$.subscribe( (list) => {
-      this.todoList = list;
-    })
-  }
-
-  searchKeyWord(arg:any){
-    
-  }
 }

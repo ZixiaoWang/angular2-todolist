@@ -30,6 +30,10 @@ import { TodolistComponent } from './components/todolist';
       { 
         path:'todolist',
         component:TodolistComponent
+      },
+      { 
+        path:'todolist/:timestamp',
+        component:TodolistComponent
       }
     ]),
     FormsModule

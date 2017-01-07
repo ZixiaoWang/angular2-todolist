@@ -1,8 +1,8 @@
 <div class="results-container">
-    <div class="result" *ngFor="let memo of memoList">
+    <div class="result" *ngFor="let memo of memoList" (click)="gotoMemoDetail(memo.time)">
         <div class="result-title" [innerHTML]="memo.content"></div>
     </div>
-    <div class="result" *ngIf="memoList === undefined">
+    <div class="result" *ngIf="memoList.length < 1">
         <div class="result-title">Couldn&amp;t find any memoes :(</div>
     </div>
 </div><!-- result container -->
