@@ -18,8 +18,12 @@
                     <th>Sun</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let row of calendarList">
-                        <td *ngFor="let cell of row" (click)="gotoDetail(cell)">
+                    <tr *ngFor="let row of calendarList; let r = index">
+                        <td
+                            *ngFor="let cell of row; let c = index" 
+                            (click)="gotoDetail(cell); focusOnThisCell(r, c)"
+                            [class.em]="r*7+c == theFocusedCell"
+                        >
                             <span class="date" [class.active]="cell.active">{{cell.date}}</span>
                             <span [class.priority-mark]="cell.urgent"></span>
                             <span [class.mark]="cell.normal"></span>

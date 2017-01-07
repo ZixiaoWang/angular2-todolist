@@ -64,12 +64,16 @@
                     padding: 5px;
                     box-sizing: border-box;
                     position: relative;
+                    border: 1px solid transparent;
                     &:not(.fade):hover{
                         background-color: #efefef;
                         cursor: pointer;
                     }
                     &.fade{
                         color: #ccc;
+                    }
+                    &.em{
+                        border-color: #ccc;
                     }
                     >.date{
                         width: 20px;

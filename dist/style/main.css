@@ -87,12 +87,15 @@
           vertical-align: top;
           padding: 5px;
           box-sizing: border-box;
-          position: relative; }
+          position: relative;
+          border: 1px solid transparent; }
           .calendar-container > .calendar > .calendar-body > .calendar-table td:not(.fade):hover {
             background-color: #efefef;
             cursor: pointer; }
           .calendar-container > .calendar > .calendar-body > .calendar-table td.fade {
             color: #ccc; }
+          .calendar-container > .calendar > .calendar-body > .calendar-table td.em {
+            border-color: #ccc; }
           .calendar-container > .calendar > .calendar-body > .calendar-table td > .date {
             width: 20px;
             height: 20px;

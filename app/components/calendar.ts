@@ -20,6 +20,8 @@ export class CalendarComponent implements OnInit {
     public todoList:Array<Memo>;
     public calendarList:Array<Array<any>> = [[],[],[],[],[],[]];
 
+    private theFocusedCell:number = -1;
+
     constructor(public todolistProvider : TodoList, private router : Router) {
         this.todoList = this.todolistProvider.getMemoHash();
         this.updateDate(this.today);
@@ -48,6 +50,8 @@ export class CalendarComponent implements OnInit {
     }
 
     updateDate(date:any):void{
+        this.theFocusedCell = -1;
+
         this.year = date.getFullYear();
         this.month = date.getMonth();
         this.date = date.getDate();
@@ -113,5 +117,9 @@ export class CalendarComponent implements OnInit {
         }else{
             this.showBox(day.timestamp);
         }
+    }
+
+    focusOnThisCell(r:number, c:number){
+        this.theFocusedCell = r*7+c;
     }
 }
