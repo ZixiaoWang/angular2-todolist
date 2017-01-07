@@ -18,11 +18,10 @@ export class SearchComponent implements OnInit {
 
     constructor(private router : Router, private location : Location, private searchResults : SearchResults, private todoListProvider : TodoList) {
         this.todothings = this.todoListProvider.getMemoArray();
-        console.log(this.todothings);
     }
 
     ngOnInit(){
-        this.todoListProvider.todolistArray$.subscribe( (list) => {
+        this.todoListProvider.todolistArray$.subscribe( (list:Array<any>) => {
           this.todothings = list;
         })
     }

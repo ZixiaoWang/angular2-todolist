@@ -21,7 +21,6 @@ export class TodolistComponent {
     private ifShowBox:boolean = false;
 
     constructor(private todolistProvider : TodoList, private router : Router){
-        console.log(this.router.url);
         this.timestamp = parseInt(this.router.url.replace(/\/todolist\/(\d*)/g, '$1'));
         this.currentDate = new Date(this.timestamp);
         this.year = this.currentDate.getFullYear() + '';
@@ -33,7 +32,7 @@ export class TodolistComponent {
     }
 
     ngOnInit(){
-        this.todolistProvider.todolistHash$.subscribe( (hashList) => {
+        this.todolistProvider.todolistHash$.subscribe( (hashList:any) => {
             this.todolist = hashList;
         })
     }

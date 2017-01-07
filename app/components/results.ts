@@ -21,7 +21,6 @@ export class ResultsListComponent implements OnInit {
      }
 
      gotoMemoDetail(timestamp:number){
-        console.log(timestamp);
         this.router.navigate(['todolist', timestamp]);
      }
 }

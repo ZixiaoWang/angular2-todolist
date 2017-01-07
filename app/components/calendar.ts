@@ -28,10 +28,9 @@ export class CalendarComponent implements OnInit {
     }
 
     ngOnInit(){
-        this.todolistProvider.todolistHash$.subscribe( (hashList) => {
+        this.todolistProvider.todolistHash$.subscribe( (hashList:any) => {
             this.todoList = hashList;
             this.updateDate(this.today);
-            console.log(this.todoList)
         })
     }
 
@@ -69,11 +68,6 @@ export class CalendarComponent implements OnInit {
         var daysInMonth = new Date(this.year, this.month+1, 0).getDate();
         var firstDayIsWhatDate = new Date(this.year, this.month, 1).getDay();
         if(firstDayIsWhatDate == 0){ firstDayIsWhatDate = 7; }
-        console.log('Generate Calendar')
-        console.log('daysInMonth: ' + daysInMonth, 'firstDayIsWhatDate: ' + firstDayIsWhatDate);
-        console.log(this.today)
-        console.log(this.year, this.month, this.date)
-        console.log(this.calendarList)
         let row = 0; let cell = 0;
         for(row=0; row<6; row++){
             for(cell = 0; cell<7; cell++){
